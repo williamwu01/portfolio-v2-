@@ -78,7 +78,24 @@ export async function POST(req: NextRequest) {
     systemInstruction: SYSTEM_PROMPT,
   });
 
-  const result = await model.generateContentStream(query);
+  // The free tier returns transient 503s under load fairly often. Retry
+  // once with a per-attempt timeout so a slow/overloaded backend fails
+  // fast instead of leaving the user waiting tens of seconds.
+  let result: Awaited<ReturnType<typeof model.generateContentStream>> | undefined;
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      result = await model.generateContentStream(query, { timeout: 8000 });
+      break;
+    } catch (err) {
+      lastError = err;
+      if (attempt === 0) await new Promise((r) => setTimeout(r, 400));
+    }
+  }
+  if (!result) {
+    console.error("Gemini request failed after retries:", lastError);
+    return Response.json({ error: "AI service unavailable" }, { status: 503 });
+  }
 
   const stream = new ReadableStream({
     async start(controller) {

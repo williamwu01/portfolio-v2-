@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const SUGGESTIONS = [
   "What projects has William built?",
-  "What makes Aurora technically impressive?",
-  "Tell me about the Threadboard architecture",
+  "Tell me about RideLink",
+  "What's William's tech stack?",
   "What's William's design philosophy?",
 ];
 
@@ -42,6 +42,10 @@ export default function AISearch({ onClose }: { onClose: () => void }) {
           body: JSON.stringify({ query: q }),
         });
 
+        if (res.status === 503) {
+          setResponse("The AI is getting a lot of requests right now — try again in a moment.");
+          return;
+        }
         if (!res.ok) throw new Error("Search failed");
 
         // Some mobile browsers (notably WebKit-based ones on iOS) don't
