@@ -306,12 +306,12 @@ function ProjectNav({
         {prev ? (
           <Link
             href={`/work/${prev.slug}`}
-            className="group py-12 pr-8 border-r border-border flex flex-col gap-2 hover:bg-surface transition-colors duration-300"
+            className="group py-8 pr-4 md:py-12 md:pr-8 border-r border-border flex flex-col gap-2 hover:bg-surface transition-colors duration-300 min-w-0"
           >
             <span className="text-xs font-mono tracking-[0.3em] uppercase text-muted group-hover:text-accent transition-colors duration-300">
               ← Previous
             </span>
-            <span className="font-display text-3xl md:text-4xl">{prev.title}</span>
+            <span className="font-display text-xl sm:text-2xl md:text-4xl break-words">{prev.title}</span>
             <span className="text-sm text-muted font-mono">{prev.tag}</span>
           </Link>
         ) : (
@@ -321,12 +321,12 @@ function ProjectNav({
         {next ? (
           <Link
             href={`/work/${next.slug}`}
-            className="group py-12 pl-8 flex flex-col gap-2 items-end text-right hover:bg-surface transition-colors duration-300"
+            className="group py-8 pl-4 md:py-12 md:pl-8 flex flex-col gap-2 items-end text-right hover:bg-surface transition-colors duration-300 min-w-0"
           >
             <span className="text-xs font-mono tracking-[0.3em] uppercase text-muted group-hover:text-accent transition-colors duration-300">
               Next →
             </span>
-            <span className="font-display text-3xl md:text-4xl">{next.title}</span>
+            <span className="font-display text-xl sm:text-2xl md:text-4xl break-words">{next.title}</span>
             <span className="text-sm text-muted font-mono">{next.tag}</span>
           </Link>
         ) : (

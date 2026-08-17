@@ -42,14 +42,14 @@ export default function Contact() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
           whileHover={{ scale: 1.02 }}
-          className="block max-w-3xl mx-auto p-8 rounded-2xl border border-border bg-surface/50 hover:border-accent transition-all duration-500 group"
+          className="block max-w-3xl mx-auto p-6 md:p-8 rounded-2xl border border-border bg-surface/50 hover:border-accent transition-all duration-500 group"
         >
           <div className="flex items-center justify-between gap-6">
-            <div>
+            <div className="min-w-0">
               <div className="text-xs font-mono uppercase tracking-widest text-muted mb-2">
                 Email me
               </div>
-              <div className="font-display text-3xl md:text-5xl text-foreground group-hover:text-gradient transition-colors">
+              <div className="font-display text-xl sm:text-2xl md:text-5xl break-all sm:break-normal text-foreground group-hover:text-gradient transition-colors">
                 williamwuu3@gmail.com
               </div>
             </div>
@@ -87,7 +87,7 @@ export default function Contact() {
                   opacity: hovered === s.label ? 1 : 0.4,
                 }}
               >
-                ↗
+                <ArrowUpRightIcon className="w-5 h-5 inline-block align-[-2px]" />
               </motion.span>
             </motion.a>
           ))}
@@ -99,5 +99,24 @@ export default function Contact() {
         <span>Built with Next.js + Three.js + lots of coffee.</span>
       </div>
     </section>
+  );
+}
+
+function ArrowUpRightIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M7 17L17 7" />
+      <path d="M8 7h9v9" />
+    </svg>
   );
 }

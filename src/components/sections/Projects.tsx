@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { projects } from "@/data/projects";
@@ -18,21 +18,29 @@ type Project = {
 
 export default function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [maxTranslate, setMaxTranslate] = useState(0);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  const x = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["0%", `-${(projects.length - 1) * 50}vw`],
-  );
-  const xClamped = useTransform(x, (v) => {
-    const max = -(projects.length - 1) * (typeof window !== "undefined" ? window.innerWidth - 480 : 0);
-    const num = parseFloat(v.toString());
-    return num + "%";
-  });
+  // The horizontal distance to scroll depends on the actual rendered card
+  // width, which varies by breakpoint (80vw mobile, 60vw tablet, 50vw
+  // desktop). Measure it directly instead of hardcoding one breakpoint's
+  // value, which caused the row to over/undershoot on other screen sizes.
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxTranslate]);
+
+  useEffect(() => {
+    function measure() {
+      if (!rowRef.current) return;
+      setMaxTranslate(Math.max(0, rowRef.current.scrollWidth - window.innerWidth));
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   return (
     <section
@@ -56,7 +64,7 @@ export default function Projects() {
           </p>
         </div>
 
-        <motion.div style={{ x }} className="flex gap-8 pl-[8vw] pt-32">
+        <motion.div ref={rowRef} style={{ x }} className="flex gap-8 pl-[8vw] pt-32">
           {projects.map((p, i) => (
             <ProjectCard key={p.title} project={p as Project} index={i} />
           ))}
