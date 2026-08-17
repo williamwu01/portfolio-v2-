@@ -42,17 +42,25 @@ export default function AISearch({ onClose }: { onClose: () => void }) {
           body: JSON.stringify({ query: q }),
         });
 
-        if (!res.ok || !res.body) throw new Error("Search failed");
+        if (!res.ok) throw new Error("Search failed");
 
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
+        // Some mobile browsers (notably WebKit-based ones on iOS) don't
+        // reliably expose a readable stream on the fetch response body.
+        // Fall back to reading the full response at once in that case.
+        if (res.body?.getReader) {
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          setResponse((prev) => prev + decoder.decode(value));
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            setResponse((prev) => prev + decoder.decode(value));
+          }
+        } else {
+          setResponse(await res.text());
         }
-      } catch {
+      } catch (err) {
+        console.error("AI search failed:", err);
         setResponse("Something went wrong. Please try again.");
       } finally {
         setLoading(false);

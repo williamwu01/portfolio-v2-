@@ -166,6 +166,16 @@ export default function HeroScene({ onShapeChange }: { onShapeChange?: (name: st
     controls.enableZoom = false;
     controls.enablePan = false;
 
+    // One-finger touch is left to the browser entirely (native scroll, any
+    // direction) so swipes always reach the next section. Two-finger drag
+    // still rotates the object (DOLLY_ROTATE with zoom disabled == rotate-only).
+    controls.touches.ONE = undefined;
+    controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
+
+    // OrbitControls sets touch-action: none on connect, which blocks native
+    // touch scrolling. Restore it now that one-finger touch isn't captured.
+    renderer.domElement.style.touchAction = "pan-y";
+
     // ── Post-processing ───────────────────────────────────────────────────
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
