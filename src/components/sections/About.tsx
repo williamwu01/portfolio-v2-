@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function About() {
   const ref = useRef<HTMLDivElement>(null);
@@ -11,6 +11,14 @@ export default function About() {
   });
   const y = useTransform(scrollYProgress, [0, 1], [80, -80]);
   const blobY = useTransform(scrollYProgress, [0, 1], [-40, 40]);
+
+  // On mobile the image's parallax can drift down into the "Ask AI about
+  // me" button sitting right below it. Parallax is a desktop nicety, so
+  // just skip it on touch devices instead of fighting the overlap.
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
 
   return (
     <section
@@ -29,7 +37,7 @@ export default function About() {
 
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center relative">
         <div className="max-w-md">
-          <motion.div style={{ y }} className="relative aspect-[3/4]">
+          <motion.div style={{ y: isTouch ? 0 : y }} className="relative aspect-[3/4]">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent via-accent-2 to-pink-400 blur-2xl opacity-40" />
             <div className="relative w-full h-full rounded-2xl overflow-hidden border border-border bg-surface">
               <div className="absolute inset-0 bg-gradient-to-br from-accent/30 via-transparent to-accent-2/30" />
@@ -51,7 +59,7 @@ export default function About() {
             }
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="mt-6 inline-flex items-center gap-2 px-5 py-3 rounded-full border border-border text-sm hover:border-accent hover:text-accent transition-all duration-300"
+            className="mt-16 md:mt-6 inline-flex items-center gap-2 px-5 py-3 rounded-full border border-border text-sm hover:border-accent hover:text-accent transition-all duration-300"
           >
             <SparkleIcon className="w-4 h-4" />
             Ask AI about me

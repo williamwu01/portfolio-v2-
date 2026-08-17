@@ -71,18 +71,16 @@ function TimelineRow({ item, index }: { item: TimelineItem; index: number }) {
 
   return (
     <div ref={ref} className="relative">
-      {/* Mobile: single-column stacked layout, dot on the left */}
-      <div className="flex md:hidden gap-4 py-8 px-10">
-        <div className="flex justify-center relative z-10 shrink-0 pt-1.5">
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            className="w-3 h-3 rounded-full bg-accent ring-4 ring-background glow"
-          />
-        </div>
-        <motion.div style={{ opacity }} className="flex-1 min-w-0">
+      {/* Mobile: single-column stacked layout, dot pinned to the line */}
+      <div className="md:hidden py-8 pl-12 pr-6">
+        <motion.div
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          className="absolute left-6 top-9.5 -translate-x-1/2 z-10 w-3 h-3 rounded-full bg-accent ring-4 ring-background glow"
+        />
+        <motion.div style={{ opacity }} className="min-w-0">
           <TimelineCard item={item} align="left" />
         </motion.div>
       </div>
@@ -166,10 +164,10 @@ export default function Timeline() {
         </motion.div>
 
         <div ref={containerRef} className="relative">
-          <div className="absolute left-17.5 md:left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-border" />
+          <div className="absolute left-6 md:left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-border" />
           <motion.div
             style={{ scaleY: scrollYProgress }}
-            className="absolute left-17.5 md:left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent via-accent-2 to-transparent origin-top"
+            className="absolute left-6 md:left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent via-accent-2 to-transparent origin-top"
           />
 
           {items.map((item, i) => (

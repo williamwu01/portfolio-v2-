@@ -2,12 +2,30 @@
 
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
 
 export default function Hero() {
   const [shape, setShape] = useState("Sphere");
+  const [isTouch, setIsTouch] = useState(false);
+  const [showGestureHint, setShowGestureHint] = useState(true);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  useEffect(() => {
+    if (!isTouch) return;
+    function hideHint() {
+      setShowGestureHint(false);
+      window.removeEventListener("scroll", hideHint);
+    }
+    window.addEventListener("scroll", hideHint, { passive: true });
+    return () => window.removeEventListener("scroll", hideHint);
+  }, [isTouch]);
+
+  const handleInteract = useCallback(() => setShowGestureHint(false), []);
 
   return (
     <section
@@ -15,7 +33,7 @@ export default function Hero() {
       className="relative h-screen w-full overflow-hidden flex items-center justify-center"
     >
       <div className="absolute inset-0 z-0">
-        <HeroScene onShapeChange={setShape} />
+        <HeroScene onShapeChange={setShape} onInteract={handleInteract} />
       </div>
 
       <div className="absolute inset-0 z-10 bg-linear-to-b from-background/0 via-background/0 to-background pointer-events-none" />
@@ -83,6 +101,44 @@ export default function Hero() {
           className="w-px h-10 bg-linear-to-b from-muted to-transparent"
         />
       </motion.div>
+
+      {isTouch && (
+        <AnimatePresence>
+          {showGestureHint && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.4, delay: 1.2 }}
+              className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-surface/80 backdrop-blur-sm text-xs text-muted pointer-events-none"
+            >
+              <TwoFingerSwipeIcon className="w-4 h-4" />
+              <span>Two-finger swipe to rotate</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
     </section>
+  );
+}
+
+function TwoFingerSwipeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <circle cx="9" cy="12" r="1.6" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="12" r="1.6" fill="currentColor" stroke="none" />
+      <path d="M4.5 9L2 12l2.5 3" />
+      <path d="M19.5 9L22 12l-2.5 3" />
+    </svg>
   );
 }

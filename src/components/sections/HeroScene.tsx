@@ -134,7 +134,13 @@ function createCircleTexture() {
   return new THREE.CanvasTexture(canvas);
 }
 
-export default function HeroScene({ onShapeChange }: { onShapeChange?: (name: string) => void }) {
+export default function HeroScene({
+  onShapeChange,
+  onInteract,
+}: {
+  onShapeChange?: (name: string) => void;
+  onInteract?: () => void;
+}) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -175,6 +181,9 @@ export default function HeroScene({ onShapeChange }: { onShapeChange?: (name: st
     // OrbitControls sets touch-action: none on connect, which blocks native
     // touch scrolling. Restore it now that one-finger touch isn't captured.
     renderer.domElement.style.touchAction = "pan-y";
+
+    const handleControlsStart = () => onInteract?.();
+    controls.addEventListener("start", handleControlsStart);
 
     // ── Post-processing ───────────────────────────────────────────────────
     const composer = new EffectComposer(renderer);
@@ -484,13 +493,14 @@ export default function HeroScene({ onShapeChange }: { onShapeChange?: (name: st
       morphTween?.kill();
       mount.removeEventListener("click", triggerMorph);
       window.removeEventListener("resize", onResize);
+      controls.removeEventListener("start", handleControlsStart);
       controls.dispose();
       geo.dispose();
       mat.dispose();
       renderer.dispose();
       if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
     };
-  }, [onShapeChange]);
+  }, [onShapeChange, onInteract]);
 
   return <div ref={mountRef} className="w-full h-full cursor-pointer" />;
 }
