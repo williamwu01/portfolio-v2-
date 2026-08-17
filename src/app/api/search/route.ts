@@ -73,14 +73,18 @@ export async function POST(req: NextRequest) {
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
+  // "gemini-flash-latest" currently resolves to gemini-3.7-flash, whose free
+  // tier caps out at 20 requests/day — nowhere near enough for a live site.
+  // gemini-3.5-flash-lite is an older, more established model with a much
+  // higher free-tier quota and is plenty capable for short Q&A like this.
   const model = genAI.getGenerativeModel({
-    model: "gemini-flash-latest",
+    model: "gemini-3.5-flash-lite",
     systemInstruction: SYSTEM_PROMPT,
   });
 
-  // The free tier returns transient 503s under load fairly often. Retry
-  // once with a per-attempt timeout so a slow/overloaded backend fails
-  // fast instead of leaving the user waiting tens of seconds.
+  // The free tier can still return transient 503s under load. Retry once
+  // with a per-attempt timeout so a slow/overloaded backend fails fast
+  // instead of leaving the user waiting tens of seconds.
   let result: Awaited<ReturnType<typeof model.generateContentStream>> | undefined;
   let lastError: unknown;
   for (let attempt = 0; attempt < 2; attempt++) {
