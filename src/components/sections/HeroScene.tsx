@@ -374,9 +374,10 @@ export default function HeroScene({ onShapeChange }: { onShapeChange?: (name: st
     const startTime = performance.now();
     let animId: number;
     let disposed = false;
+    let isVisible = true;
 
     function animate() {
-      if (disposed) return;
+      if (disposed || !isVisible) return;
       animId = requestAnimationFrame(animate);
       const elapsed = (performance.now() - startTime) / 1000;
       controls.update();
@@ -452,6 +453,19 @@ export default function HeroScene({ onShapeChange }: { onShapeChange?: (name: st
     }
     animate();
 
+    // Stop rendering entirely once the hero scrolls off-screen — keeping a
+    // 24k-particle scene with bloom running while the user scrolls past it
+    // competes with the browser's compositor and makes scrolling feel janky.
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisible;
+        isVisible = entry.isIntersecting;
+        if (isVisible && !wasVisible) animate();
+      },
+      { threshold: 0 },
+    );
+    visibilityObserver.observe(mount);
+
     // ── Resize ────────────────────────────────────────────────────────────
     function onResize() {
       const w = mount.clientWidth, h = mount.clientHeight;
@@ -465,6 +479,7 @@ export default function HeroScene({ onShapeChange }: { onShapeChange?: (name: st
     return () => {
       disposed = true;
       cancelAnimationFrame(animId);
+      visibilityObserver.disconnect();
       clearInterval(autoMorphTimer);
       morphTween?.kill();
       mount.removeEventListener("click", triggerMorph);

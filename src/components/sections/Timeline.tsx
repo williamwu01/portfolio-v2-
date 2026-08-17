@@ -70,30 +70,49 @@ function TimelineRow({ item, index }: { item: TimelineItem; index: number }) {
   const left = index % 2 === 0;
 
   return (
-    <div ref={ref} className="relative grid grid-cols-9 items-center py-12">
-      <motion.div
-        style={{ opacity, x: left ? x : undefined }}
-        className={`col-span-4 ${left ? "text-right pr-8" : "col-start-6 pl-8"}`}
-      >
-        {left && <TimelineCard item={item} align="right" />}
-      </motion.div>
-
-      <div className="col-span-1 flex justify-center relative z-10">
-        <motion.div
-          initial={{ scale: 0 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true, margin: "-30%" }}
-          transition={{ type: "spring", stiffness: 200, damping: 15 }}
-          className="w-4 h-4 rounded-full bg-accent ring-4 ring-background glow"
-        />
+    <div ref={ref} className="relative">
+      {/* Mobile: single-column stacked layout, dot on the left */}
+      <div className="flex md:hidden gap-4 py-8">
+        <div className="flex justify-center relative z-10 shrink-0 pt-1.5">
+          <motion.div
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            className="w-3 h-3 rounded-full bg-accent ring-4 ring-background glow"
+          />
+        </div>
+        <motion.div style={{ opacity }} className="flex-1 min-w-0">
+          <TimelineCard item={item} align="left" />
+        </motion.div>
       </div>
 
-      <motion.div
-        style={{ opacity, x: !left ? x : undefined }}
-        className={`col-span-4 ${!left ? "pl-8" : "col-start-1 row-start-1 text-right pr-8 invisible"}`}
-      >
-        {!left && <TimelineCard item={item} align="left" />}
-      </motion.div>
+      {/* Desktop: alternating zigzag layout */}
+      <div className="hidden md:grid grid-cols-9 items-center py-12">
+        <motion.div
+          style={{ opacity, x: left ? x : undefined }}
+          className={`col-span-4 ${left ? "text-right pr-8" : "col-start-6 pl-8"}`}
+        >
+          {left && <TimelineCard item={item} align="right" />}
+        </motion.div>
+
+        <div className="col-span-1 flex justify-center relative z-10">
+          <motion.div
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true, margin: "-30%" }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            className="w-4 h-4 rounded-full bg-accent ring-4 ring-background glow"
+          />
+        </div>
+
+        <motion.div
+          style={{ opacity, x: !left ? x : undefined }}
+          className={`col-span-4 ${!left ? "pl-8" : "col-start-1 row-start-1 text-right pr-8 invisible"}`}
+        >
+          {!left && <TimelineCard item={item} align="left" />}
+        </motion.div>
+      </div>
     </div>
   );
 }
@@ -141,16 +160,16 @@ export default function Timeline() {
           <p className="text-sm tracking-[0.3em] uppercase text-muted mb-4">
             The Path
           </p>
-          <h2 className="font-display text-6xl md:text-8xl">
+          <h2 className="font-display text-4xl sm:text-6xl md:text-8xl">
             Where I&rsquo;ve <span className="italic text-gradient">been</span>
           </h2>
         </motion.div>
 
         <div ref={containerRef} className="relative">
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-border" />
+          <div className="absolute left-[1.875rem] md:left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-border" />
           <motion.div
             style={{ scaleY: scrollYProgress }}
-            className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent via-accent-2 to-transparent origin-top"
+            className="absolute left-[1.875rem] md:left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent via-accent-2 to-transparent origin-top"
           />
 
           {items.map((item, i) => (
