@@ -280,9 +280,9 @@ function Metrics({ project }: { project: ProjectFull }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="bg-surface p-8 flex flex-col gap-2"
+            className="bg-surface p-4 sm:p-6 md:p-8 flex flex-col gap-2 min-w-0"
           >
-            <span className="font-display text-5xl md:text-6xl text-gradient">
+            <span className="font-display text-2xl sm:text-4xl md:text-6xl text-gradient break-words">
               {metric.value}
             </span>
             <span className="text-sm text-muted leading-snug">{metric.label}</span>
