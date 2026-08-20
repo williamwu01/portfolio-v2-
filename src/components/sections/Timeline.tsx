@@ -22,7 +22,7 @@ const items: TimelineItem[] = [
   },
   {
     year: "May 2025 - Mar 2026",
-    title: "Project Manager | Lead Developer",
+    title: "Project Manager | Developer",
     org: "PulseHire AI",
     type: "work",
     description:

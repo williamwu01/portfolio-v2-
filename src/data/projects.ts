@@ -104,7 +104,7 @@ export const projects: ProjectFull[] = [
     image: "/projects/pulsehire.png",
     url: "https://pulsehire.ai/",
     year: "2025",
-    role: "Project Manager | Lead Developer",
+    role: "Project Manager | Developer",
     timeline: "May 2025 - Mar 2026",
     stack: ["Next.js", "TypeScript", "GA4", "Google Tag Manager", "Figma"],
     overview:
