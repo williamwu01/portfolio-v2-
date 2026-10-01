@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# William Wu — portfolio
 
-## Getting Started
+Next.js (App Router) + TypeScript + three.js. A real-time Coast Mountains river valley
+fills the background. Scrolling flies the camera down the river and dives it into a
+deep fjord; projects float past as glass bubbles.
 
-First, run the development server:
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # static site in /out (deploy to Vercel, Netlify, GitHub Pages…)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| File | What it does |
+| --- | --- |
+| `lib/content.ts` | All copy: bio, experience, projects, stack, links. Edit here. |
+| `components/Scene.tsx` | The WebGL world: terrain, water (above + below), trees, kelp, light shafts, particles, scroll-driven camera path. |
+| `components/ProjectBubbles.tsx` | Pinned right-to-left bubble carousel driven by scroll. |
+| `components/Dock.tsx` | Depth gauge + Golden / Blue hour / Night switch. |
+| `lib/sceneBus.ts` | Tiny store that connects the mood buttons to the scene. |
+| `app/globals.css` | Design tokens and all styles. |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tuning
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Camera path:** `KF` in `Scene.tsx` (one row per keyframe) is tied to the section
+  ids `about`, `experience`, `work`, `stack` in `measure()`. Add a section → add a keyframe.
+- **Where you dive:** keyframes 3→4 cross `y = 0`, which lines up with the top of `#work`.
+- **Carousel length:** the pinned section is `N * 75 + 100` svh tall in `ProjectBubbles.tsx`;
+  lower 75 for faster bubbles.
+- **Bubble colour:** each project's `hue` in `content.ts`.
+- **Fonts** load from Google Fonts in `app/layout.tsx`; swap to `next/font/google` if you like.
