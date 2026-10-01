@@ -22,13 +22,13 @@ export default function CaseShot({
         {!open && <div className="case-shot-fade" aria-hidden="true" />}
         {!open && (
           <button type="button" className="case-shot-toggle" onClick={() => setOpen(true)}>
-            View full page <span aria-hidden="true">↓</span>
+            View full page <span aria-hidden="true">↓︎</span>
           </button>
         )}
       </div>
       {open && (
         <button type="button" className="btn ghost small" onClick={() => setOpen(false)}>
-          Show less <span aria-hidden="true">↑</span>
+          Show less <span aria-hidden="true">↑︎</span>
         </button>
       )}
     </div>

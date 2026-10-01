@@ -220,6 +220,10 @@ h2.big { font-size: clamp(52px, 8vw, 120px); line-height: .86; }
     0 40px 90px rgba(0, 10, 18, .35);
   animation: jelly 7s ease-in-out infinite; animation-delay: var(--d);
 }
+/* off-focus bubbles: drop the expensive blur + keep animations frozen so
+   scrolling doesn't have to recomposite backdrop-filter on several at once */
+.bubble[data-focus="false"] { backdrop-filter: none; -webkit-backdrop-filter: none; animation-play-state: paused; }
+.bubble[data-focus="false"]::before { animation-play-state: paused; }
 /* iridescent film on the rim */
 .bubble::before {
   content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 2px; pointer-events: none;

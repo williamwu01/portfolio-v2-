@@ -47,7 +47,7 @@ export default async function CaseStudy({
           William<span>.</span>
         </Link>
         <Link className="hello" href="/#work">
-          ← All work
+          ←︎ All work
         </Link>
       </nav>
 
@@ -78,7 +78,7 @@ export default async function CaseStudy({
           {project.live && (
             <a className="btn primary" href={project.live.href} target="_blank" rel="noreferrer">
               Visit {project.live.label}
-              <span aria-hidden="true">↗</span>
+              <span aria-hidden="true">↗︎</span>
             </a>
           )}
         </header>
@@ -144,13 +144,13 @@ export default async function CaseStudy({
 
         <footer className="case-foot wrap">
           <Link className="case-nav-link" href={`/work/${prev.slug}`}>
-            <span aria-hidden="true">←</span> {prev.name}
+            <span aria-hidden="true">←︎</span> {prev.name}
           </Link>
           <Link className="btn ghost" href="/#work">
             All work
           </Link>
           <Link className="case-nav-link" href={`/work/${next.slug}`}>
-            {next.name} <span aria-hidden="true">→</span>
+            {next.name} <span aria-hidden="true">→︎</span>
           </Link>
         </footer>
       </main>

@@ -114,9 +114,9 @@ export default function Home() {
             <p className="body">Open to full-time roles and freelance projects in Vancouver or remote.</p>
             <CopyEmail email={profile.email} />
             <div className="socials">
-              <a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
-              <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
-              <a href={profile.resume} target="_blank" rel="noreferrer">Résumé (PDF) ↗</a>
+              <a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗︎</a>
+              <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗︎</a>
+              <a href={profile.resume} target="_blank" rel="noreferrer">Résumé (PDF) ↗︎</a>
             </div>
           </div>
           <footer className="foot">

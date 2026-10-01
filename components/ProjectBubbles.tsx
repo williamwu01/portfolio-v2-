@@ -59,12 +59,13 @@ export default function ProjectBubbles() {
           x += Math.cos(t * 0.6 + i * 2.3) * 6;
           rot = Math.sin(t * 0.5 + i) * 2 - o * 4;
         }
+        el.style.display = op <= 0.002 ? "none" : "";
         el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) scale(${sc.toFixed(3)}) rotate(${rot.toFixed(2)}deg)`;
         el.style.opacity = op.toFixed(3);
         el.style.zIndex = String(100 - Math.round(Math.abs(o) * 10));
         const focus = Math.abs(o) < 0.5;
         if (el.inert === focus) el.inert = !focus;
-        el.dataset.focus = focus ? "true" : "false";
+        if (el.dataset.focus !== String(focus)) el.dataset.focus = focus ? "true" : "false";
       });
 
       const a = Math.round(f);
@@ -120,7 +121,7 @@ export default function ProjectBubbles() {
                 <p className="b-desc">{pr.description}</p>
                 <div className="b-links">
                   <Link href={`/work/${pr.slug}`}>Case study</Link>
-                  {pr.live && <a href={pr.live.href} target="_blank" rel="noreferrer">{pr.live.label} <span aria-hidden="true">↗</span></a>}
+                  {pr.live && <a href={pr.live.href} target="_blank" rel="noreferrer">{pr.live.label} <span aria-hidden="true">↗︎</span></a>}
                 </div>
               </div>
             </article>
